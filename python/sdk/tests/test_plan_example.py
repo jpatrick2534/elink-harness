@@ -44,14 +44,15 @@ def test_plan_example_reports_truncation_and_accepts_explicit_dismissal(
     terminal_input.write_text("d\n", encoding="utf-8")
     monkeypatch.setenv("DSH_TELEMETRY_DISABLED", "1")
     monkeypatch.setenv("DSH_TOOLS_MODE", "native")
+    monkeypatch.setenv("DEEPSEEK_API_KEY", "keyless-plan-example")
     monkeypatch.setattr(sys, "argv", [str(_EXAMPLE), "--dsh-home", str(tmp_path / "home"),
                                      "--workspace", str(workspace), "Plan a small change."])
     with terminal_input.open(encoding="utf-8") as terminal, _ModelServer([completion]) as model:
         monkeypatch.setattr(sys, "stdin", terminal)
         def configured_harness(**options: object) -> DeepSeekHarness:
             return DeepSeekHarness(
-                **options, dsh_bin=_dsh_bin(), patches=(str(patch),),
-                base_url=model.url, api_key="keyless-plan-example",
+                **{**options, "provider": "deepseek-official", "model": "deepseek-v4-flash"},
+                dsh_bin=_dsh_bin(), patches=(str(patch),), base_url=model.url,
                 initialize_timeout_seconds=30, request_timeout_seconds=20, shutdown_timeout_seconds=20,
             )
 

@@ -288,11 +288,11 @@ def _runtime(
     with _ModelServer(completions) as model_server, ThreadPoolExecutor(max_workers=2) as workers:
         harness = DeepSeekHarness(
             cwd=str(workspace), runtime_cwd=str(workspace), dsh_home=str(home),
-            dsh_bin=dsh_bin, profile="sdk", patches=tuple(str(item) for item in patches), model=model,
-            base_url=model_server.url, api_key="keyless-commands-runtime",
+            dsh_bin=dsh_bin, profile="sdk", patches=tuple(str(item) for item in patches),
+            provider="deepseek-official", model=model, base_url=model_server.url,
             initialize_timeout_seconds=60, request_timeout_seconds=20, shutdown_timeout_seconds=20,
             on_user_question=on_user_question,
-            env={"DSH_PERMISSION_MODE": initial_permission,
+            env={"DSH_PERMISSION_MODE": initial_permission, "DEEPSEEK_API_KEY": "keyless-commands-runtime",
                  "DSH_TELEMETRY_DISABLED": "1", "DSH_TOOLS_MODE": "native"},
         )
         try:
