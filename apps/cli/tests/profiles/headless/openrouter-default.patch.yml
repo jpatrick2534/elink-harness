@@ -1,0 +1,41 @@
+# Test-only patch over the shipped base + headless profile. The root agent
+# uses the default provider's route and model. The title request is off and the
+# output cap is small to keep the paid run to one short request.
+- id: headless-startup
+  disabled: true
+
+- id: headless-runner
+  disabled: true
+
+- id: session-title-llm
+  disabled: true
+
+- id: llm-pi-ai
+  config:
+    providers:
+      openrouter:
+        displayName: OpenRouter
+        apiKeyEnv: OPENROUTER_API_KEY
+        reasoning: low
+        modelOverrides:
+          qwen/qwen4-max:
+            maxTokens: 512
+
+- id: agent-loop
+  config:
+    agents:
+      - id: main
+        provider: openrouter
+        model: qwen/qwen4-max
+        cwd: !!js process.cwd()
+
+- id: session-persistence-jsonl
+  config:
+    root: './.sessions'
+    compression: none
+
+- id: sandbox-policy
+  inject: []
+  config:
+    mode: read-only
+    workspaceRoot: !!js process.cwd()
