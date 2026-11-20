@@ -98,3 +98,16 @@ index 7da1c45..296d131 100644
                  break;
              }
              case "toolcall_end":
+diff --git a/dist/providers/openrouter.models.js b/dist/providers/openrouter.models.js
+index cdfb995..9af8d8e 100644
+--- a/dist/providers/openrouter.models.js
++++ b/dist/providers/openrouter.models.js
+@@ -2,6 +2,8 @@
+ // Do not edit manually - run 'npm run generate-models' to update
+ import values from "./data/openrouter.json" with { type: "json" };
+ import { flattenChatModelCatalog, flattenClassifierModelCatalog, flattenImageModelCatalog } from "../model-catalog.js";
++// Qwen4 Max from the pi-ai 1.6.0 catalog, with the developer-role setting of the other Qwen models; drop on the next pi-ai upgrade.
++values["openai-completions"]["chat:qwen/qwen4-max"] = { "type": "chat", "id": "qwen/qwen4-max", "name": "Qwen: Qwen4 Max", "api": "openai-completions", "baseUrl": "https://openrouter.ai/api/v1", "provider": "openrouter", "reasoning": true, "thinkingLevelMap": { "off": "none", "minimal": null, "low": "low", "medium": null, "high": "high", "xhigh": "xhigh", "max": null }, "input": ["text", "image"], "cost": { "input": 1.425, "output": 4.275, "cacheRead": 0.07125, "cacheWrite": 1.78125 }, "contextWindow": 1000000, "maxTokens": 131072, "compat": { "supportsDeveloperRole": false, "thinkingFormat": "openrouter", "supportsStrictMode": true, "sendSessionAffinityHeaders": true }, "inputLimits": { "images": { "resize": { "maxWidth": 2000, "maxHeight": 2000, "maxBytes": 4718592, "jpegQuality": 80 } } } };
+ export const OPENROUTER_MODELS = flattenChatModelCatalog("openrouter", values);
+ export const OPENROUTER_IMAGE_MODELS = flattenImageModelCatalog("openrouter", values);
+ export const OPENROUTER_CLASSIFIER_MODELS = flattenClassifierModelCatalog("openrouter", values);
