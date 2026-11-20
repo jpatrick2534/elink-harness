@@ -531,7 +531,7 @@ it('assembles the shipped Web transport, catalog, guidance, and defaults', async
   scaffold = await launchWebScaffold({ deepSeekMissingCredential: true })
   const ctx = scaffold.ctx
   expect(ctx.llm.listProviders().some(provider => provider.id === 'deepseek-messages')).toBe(false)
-  expect(ctx.agentDefaultModel.currentSelection()).toEqual({ provider: 'deepseek-official', model: 'deepseek-flash' })
+  expect(ctx.agentDefaultModel.currentSelection()).toEqual({ provider: 'openrouter', model: 'qwen/qwen4-max' })
   const index = await scaffold.hostFetch('/', {
     headers: { 'accept-encoding': 'gzip' },
   })

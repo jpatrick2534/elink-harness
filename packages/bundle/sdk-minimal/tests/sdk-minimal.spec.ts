@@ -29,6 +29,7 @@ describe('dsh-sdk-minimal bundle', () => {
       ['plugin-package-inventory-deepseek', '@deepseek-ai/dsh-plugin-package-inventory-deepseek'],
       ['deepseek-auth', '@deepseek-ai/dsh-deepseek-auth'],
       ['llm-deepseek', '@deepseek-ai/dsh-llm-deepseek-api-key'],
+      ['llm-pi-ai', '@deepseek-ai/dsh-llm-pi-ai'],
       ['sandbox', '@deepseek-ai/dsh-sandbox-local'],
       ['filesystem', '@deepseek-ai/dsh-fs-local'],
       ['attachment-local', '@deepseek-ai/dsh-attachment-local'],
@@ -69,6 +70,9 @@ describe('dsh-sdk-minimal bundle', () => {
       apiKeyEnv: 'DEEPSEEK_API_KEY',
       defaultContextWindow: { __jsExpr: 'Number(process.env.DSH_CONTEXT_WINDOW ?? 1000000)' },
       streamIdleTimeoutMs: 172800000,
+    })
+    expect(rows.find(row => row.id === 'llm-pi-ai')?.config).toEqual({
+      providers: { openrouter: { displayName: 'OpenRouter', apiKeyEnv: 'OPENROUTER_API_KEY' } },
     })
     expect(rows.find(row => row.id === 'system-prompt')?.config).toEqual({
       includeHarnessIdentity: false,

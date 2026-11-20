@@ -33,6 +33,15 @@
         defaultContextWindow: !!js Number(process.env.DSH_CONTEXT_WINDOW ?? 1000000)
         streamIdleTimeoutMs: 172800000
 
+    # The default provider: the OpenRouter route, keyed by OPENROUTER_API_KEY.
+    - id: llm-pi-ai
+      name: '@deepseek-ai/dsh-llm-pi-ai'
+      config:
+        providers:
+          openrouter:
+            displayName: OpenRouter
+            apiKeyEnv: OPENROUTER_API_KEY
+
     - id: sandbox
       name: '@deepseek-ai/dsh-sandbox-local'
 
