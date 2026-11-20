@@ -388,8 +388,9 @@ export interface LaunchOptions {
   replayContextWindow?: number
   /**
    * Keep the shipped DeepSeek adapter mounted while masking the process
-   * environment's DEEPSEEK_API_KEY for this scaffold lifetime. This is the
-   * keyless first-run configuration lane; the default disables the adapter.
+   * environment's DEEPSEEK_API_KEY and the default provider's OPENROUTER_API_KEY
+   * for this scaffold lifetime. This is the keyless first-run configuration
+   * lane; the default disables the adapter.
    */
   deepSeekMissingCredential?: boolean
   /** Leave the current welcome notice pending; ordinary scenarios pre-acknowledge it before browser boot. */
@@ -503,15 +504,15 @@ export async function launchWebScaffold(options: LaunchOptions = {}): Promise<We
   // ran with a real key. Other runs keep the launching environment, as their goldens do.
   const pinDeepSeekCredential = mode !== 'record' && !maskDeepSeekCredential
     && options.replayFixture !== undefined && options.replayProvidersOnly !== true
-  const originalDeepSeekCredential = process.env.DEEPSEEK_API_KEY
+  const credentialNames = ['DEEPSEEK_API_KEY', 'OPENROUTER_API_KEY'] as const
+  const originalCredentials = credentialNames.map(name => [name, process.env[name]] as const)
   let credentialEnvironmentRestored = false
   const restoreCredentialEnvironment = (): void => {
     if (credentialEnvironmentRestored || (!maskDeepSeekCredential && !pinDeepSeekCredential)) return
     credentialEnvironmentRestored = true
-    if (originalDeepSeekCredential === undefined) {
-      Reflect.deleteProperty(process.env, 'DEEPSEEK_API_KEY')
-    } else {
-      process.env.DEEPSEEK_API_KEY = originalDeepSeekCredential
+    for (const [name, value] of originalCredentials) {
+      if (value === undefined) Reflect.deleteProperty(process.env, name)
+      else process.env[name] = value
     }
   }
   const workspaceParent = await realpath(tmpdir())
@@ -567,7 +568,7 @@ export async function launchWebScaffold(options: LaunchOptions = {}): Promise<We
     if (failures.length > 1) throw new AggregateError(failures, 'web scaffold temp-root setup failed')
     throw error
   }
-  if (maskDeepSeekCredential) Reflect.deleteProperty(process.env, 'DEEPSEEK_API_KEY')
+  if (maskDeepSeekCredential) for (const name of credentialNames) Reflect.deleteProperty(process.env, name)
   if (pinDeepSeekCredential) Object.assign(process.env, REPLAY_CREDENTIAL_ENV)
 
   // The include patch set — the same layer stack the profile boot composes

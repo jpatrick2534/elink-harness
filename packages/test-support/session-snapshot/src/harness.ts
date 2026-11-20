@@ -51,8 +51,13 @@ const WAIT_POLL_INTERVAL_MS = 10
  * Credential environment every keyless replay layers under its scenario environment. Shipped
  * profiles offer `web_search` only while a DeepSeek search key is configured and recordings ran
  * with a real key, so a replay supplies a placeholder instead of whatever the runner exports.
+ * The default provider's key is blanked, which reads as absent, so a runner's own OpenRouter key
+ * cannot add that route's catalog to replayed model lists.
  */
-export const REPLAY_CREDENTIAL_ENV: Readonly<Record<string, string>> = { DEEPSEEK_API_KEY: 'snapshot-replay-key' }
+export const REPLAY_CREDENTIAL_ENV: Readonly<Record<string, string>> = {
+  DEEPSEEK_API_KEY: 'snapshot-replay-key',
+  OPENROUTER_API_KEY: '',
+}
 
 /**
  * One step of a scenario's deterministic input script (`input.json`). The
